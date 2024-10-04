@@ -1,0 +1,35 @@
+# This file describes a Fastly Compute package. To learn more visit:
+# https://www.fastly.com/documentation/reference/compute/fastly-toml
+
+authors = ["antoinebrossault@gmail.com"]
+cloned_from = "https://github.com/fastly/compute-starter-kit-javascript-default"
+description = ""
+language = "javascript"
+manifest_version = 3
+name = "fastlyComputeDynamicAds"
+service_id = "Qawq9Fn4yqghD7Cbluoa90"
+
+[local_server]
+
+  [local_server.backends]
+
+    [local_server.backends.origin_playground_antoinebrossault_com]
+      override_host = "origin-playground.antoinebrossault.com"
+      url = "https://origin-playground.antoinebrossault.com"
+
+  [local_server.kv_stores]
+    [[local_server.kv_stores.main]]
+      key = "base"
+      path = "./ad.html"
+
+[scripts]
+  build = "npm run build"
+  post_init = "npm install"
+
+[setup]
+
+  [setup.backends]
+
+    [setup.backends.origin_playground_antoinebrossault_com]
+      address = "origin-playground.antoinebrossault.com"
+      port = 443
