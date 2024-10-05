@@ -23,7 +23,7 @@ router.get("/vanilla", async (req, res) => {
 router.get("/vanilla-ttl-10h", async (req, res) => {
   res.send(await fetch("/", {
     backend: "origin_playground_antoinebrossault_com",
-    ttl: 60*60*10 // TTL 10 hours
+    ttl: 60 * 60 * 10 // TTL 10 hours
   }));
 });
 
@@ -34,25 +34,30 @@ router.get("/", async (req, res) => {
 
   if (req.ip) {
 
-    const geoLocData = getGeolocationForIpAddress(req.ip)
+    const geoLocData = getGeolocationForIpAddress(req.ip);
+
+    console.log(`${req.ip} | ${geoLocData.city}`);
 
     adToServe = geoLocData.city ? geoLocData.city.toLowerCase().split(' ').join('-') : "base";
 
   }
 
+  // Init the KV store 
   const files = new KVStore('main');
 
+  // Try to get the ad for the city of the user if req.ip is set.
   let entry = await files.get(adToServe);
 
-  if(!entry) {
-    entry =  await files.get("base");
+  // If that city doesn't exists in KV store then fallback to "base"
+  if (!entry) {
+    entry = await files.get("base");
   }
 
   // Forward the request to a backend.
   let beResp = await fetch(
     "https://origin-playground.antoinebrossault.com", {
       backend: "origin_playground_antoinebrossault_com",
-      ttl: 60*60*10 // TTL 10 hours
+      ttl: 60 * 60 * 10 // TTL 10 hours
     }
   );
 
